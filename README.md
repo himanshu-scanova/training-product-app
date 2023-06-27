@@ -1,1 +1,0 @@
-# training-product-app
