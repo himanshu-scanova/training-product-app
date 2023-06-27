@@ -1,3 +1,4 @@
 env/
 product/settings.ini
 db.sqlite3
+.env
