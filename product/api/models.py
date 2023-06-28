@@ -9,11 +9,10 @@ from django.db import models
 import uuid
 from django.contrib.auth.models import User
 from product.celery import send_email
+from django.urls import reverse
+from django.contrib.sites.models import Site
 
 
-# This code is triggered whenever a new user has been created and saved to the database
-# For this part code to work make sure to add this file such that
-# it get used when the code compiles
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -38,8 +37,11 @@ class ProductModel(models.Model):
 
 
 @receiver(post_save, sender=ProductModel)
-def send_email(sender, instance=None, created=False, **kwargs):
-    print(instance)
-    # have to get user email and make url to send the mail !!
-    if created and instance.user.email:
-        send_email(instance.user.email, "")
+def send_email_to_user(sender, instance=None, created=False, **kwargs):
+    email = instance.user.email
+    url = "http://" + Site.objects.get(id=1).domain + reverse("product-view", args=[instance.id])
+    if created and email:
+        send_email(email, url)
+
+
+

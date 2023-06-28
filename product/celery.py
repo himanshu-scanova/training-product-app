@@ -2,6 +2,7 @@ import os
 from celery import Celery
 from django.conf import settings
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'product.settings')
@@ -21,9 +22,7 @@ app.autodiscover_tasks()
 @app.task(bind=True, ignore_result=True)
 def send_email(self, email, url):
     subject = 'New Product Created!'
-    html_message = 'Hello there, ' \
-                   '<br> Here is the product you created.. ' \
-                   '<br> <a href="https://google.com">See Now</a>'
+    html_message = render_to_string("email.html", {"url": url})
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email, ]
     send_mail(subject, "", email_from, recipient_list, False, None, None, None, html_message)
