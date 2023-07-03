@@ -42,6 +42,11 @@ class Products(generics.ListCreateAPIView):
     queryset = ProductModel.objects.all()
     serializer_class = ProductModelSerializer
 
+    def get_queryset(self):
+        return self.queryset.filter(
+            user=self.request.user
+        )
+
     def perform_create(self, serializer):
         return serializer.save(
             user=self.request.user

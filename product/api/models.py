@@ -8,7 +8,8 @@ from django.conf import settings
 from django.db import models
 import uuid
 from django.contrib.auth.models import User
-from product.celery import send_email
+# from product.celery import send_email
+from product.tasks import send_email
 from django.urls import reverse
 from django.contrib.sites.models import Site
 
@@ -31,6 +32,10 @@ class ProductModel(models.Model):
     class Meta:
         db_table = "products"
         ordering = ['-createdAt']
+        indexes = [
+            models.Index(fields=['category']),
+            models.Index(fields=['name'])
+        ]
 
         def __str__(self) -> str:
             return self.name
@@ -39,9 +44,9 @@ class ProductModel(models.Model):
 @receiver(post_save, sender=ProductModel)
 def send_email_to_user(sender, instance=None, created=False, **kwargs):
     email = instance.user.email
-    url = "http://" + Site.objects.get(id=1).domain + reverse("product-view", args=[instance.id])
+    url = "http://" + Site.objects.get(id=2).domain + reverse("product-view", args=[instance.id])
     if created and email:
-        send_email(email, url)
+        send_email.delay(email, url)
 
 
 
