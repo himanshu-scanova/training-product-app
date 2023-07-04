@@ -17,6 +17,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=Product)
 def send_email_to_user(sender, instance=None, created=False, **kwargs):
     email = instance.user.email
-    url = "http://" + Site.objects.get(id=1).domain + reverse("product-view", args=[instance.id])
+    url = "http://" + Site.objects.get(id=3).domain + reverse("product-view", args=[instance.id])
     if created and email:
         send_email.delay(email, url)
