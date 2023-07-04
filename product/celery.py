@@ -22,8 +22,8 @@ app.conf.beat_schedule = {
     'send-email-every-day': {
         # Task Name (Name Specified in Decorator)
         'task': 'send_mail_users_product_count',
-        # Schedule - sends email at 12:49PM everyday
-        'schedule': crontab(hour=12, minute=49),
+        # Schedule - sends email every 15 mins
+        'schedule': 15*60,
         # Function Arguments
         # 'args': ("Hello",)
     },

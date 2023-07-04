@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from product.api.models import ProductModel
+from api.models import Product
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -28,7 +28,7 @@ class TokenModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductModelSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductModel
+        model = Product
         fields = '__all__'

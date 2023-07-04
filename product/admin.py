@@ -1,4 +1,4 @@
-from product.api.models import ProductModel
+from api.models import Product
 from django.contrib import admin
 
 
@@ -9,4 +9,4 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-admin.site.register(ProductModel, ProductAdmin)
+admin.site.register(Product, ProductAdmin)

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.sites',
     'product',
+    'api',
     'rest_framework',
     'rest_framework.authtoken'
 ]

@@ -3,7 +3,8 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
-import product.api.models
+import api.models
+from django.db.models import Count
 
 
 @shared_task(name="send_mail")
@@ -17,16 +18,15 @@ def send_email(email, url):
 
 @shared_task(name="send_mail_users_product_count")
 def send_mail_users_product_count():
-    users = User.objects.all()
+    users = User.objects.annotate(num_products=Count("product"))
     for user in users:
         try:
-            product_count = product.api.models.ProductModel.objects.filter(user=user).count()
-            print(user.username, product_count)
+            print(f"{user.username} has {user.num_products} product(s)")
             if user.email and not user.is_staff:
                 subject = 'Products Update!'
-                message = f"You have {product_count} product(s) in total right now!"
+                message = f"You have {user.num_products} product(s) in total right now!"
                 email_from = settings.EMAIL_HOST_USER
                 recipient_list = [user.email, ]
                 send_mail(subject, message, email_from, recipient_list)
-        except product.api.models.ProductModel.DoesNotExist:
+        except api.models.Product.DoesNotExist:
             print("Couldn't query DB")
